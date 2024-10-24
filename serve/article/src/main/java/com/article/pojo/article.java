@@ -10,7 +10,6 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
-import org.hibernate.validator.constraints.URL;
 
 import java.time.LocalDateTime;
 
@@ -35,7 +34,6 @@ public class article {
      * 文章封面
      */
     @NotEmpty
-    @URL
     private String image;
 
 
@@ -56,7 +54,6 @@ public class article {
     /*
     * 文章访问量
     */
-    @NotNull
     private Integer visitCount;
 
     /*
