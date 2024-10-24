@@ -47,7 +47,7 @@ public class article {
 
 
     /**
-     * 文章状态: 只能是[已发布] 或者 [草稿]
+     * 文章状态:，0草稿, 1隐藏,2发布
      */
     @NotNull
     private Integer state;
