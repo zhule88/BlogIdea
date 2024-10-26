@@ -57,9 +57,12 @@ public class ArticleController {
         articleService.save(article);
         return Result.success();
     }
-    @Operation(summary = "新增文章")
+    @Operation(summary = "修改文章")
     @PutMapping("/update")
     public Result update(@RequestBody article article) {
+        if(article.getState() == 0){
+            article.setCreateTime(LocalDateTime.now());
+        }
         article.setUpdateTime(LocalDateTime.now());
         articleService.updateById(article);
         return Result.success();

@@ -16,6 +16,8 @@ import java.util.UUID;
 @Tag(name = "图片处理")
 public class CoverController {
 
+    final String prefix = "C:\\Users\\zhule\\Desktop\\blog\\public\\image";
+
 
     @Operation(summary = "上传图片")
     @PostMapping("/upload")
@@ -26,11 +28,11 @@ public class CoverController {
             // 生成新文件名
             String suffix = StrUtil.subAfter(originalFilename, ".", true);
             String name = UUID.randomUUID().toString();
-            String fileName = name + "."+suffix;
+            String fileName = name + "." + suffix;
             // 保存文件
             if (originalFilename != null) {
-                image.transferTo(new File("C:\\Users\\zhule\\Desktop\\blog\\public\\image", fileName));
-            }else{
+                image.transferTo(new File(prefix, fileName));
+            } else {
                 return Result.error("文件名空");
             }
             return Result.success(fileName);
@@ -38,10 +40,11 @@ public class CoverController {
             throw new RuntimeException("文件上传失败", e);
         }
     }
+
     @Operation(summary = "删除图片")
     @DeleteMapping("/delete")
-    public Result delete(String name) {
-        File delFile = new File(name);
+    public Result delete(String filename) {
+        File delFile = new File(prefix, filename);
         if (delFile.delete()) {
             return Result.success();
         }
