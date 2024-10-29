@@ -51,6 +51,7 @@ public class ArticleController {
     @Operation(summary = "新增文章")
     @PostMapping("/add")
     public Result add(@RequestBody article article) {
+        article.setId(null);
         article.setVisitCount(0);
         article.setCreateTime(LocalDateTime.now());
         article.setUpdateTime(LocalDateTime.now());
@@ -60,9 +61,6 @@ public class ArticleController {
     @Operation(summary = "修改文章")
     @PutMapping("/update")
     public Result update(@RequestBody article article) {
-        if(article.getState() == 0){
-            article.setCreateTime(LocalDateTime.now());
-        }
         article.setUpdateTime(LocalDateTime.now());
         articleService.updateById(article);
         return Result.success();

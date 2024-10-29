@@ -23,6 +23,10 @@ public class article {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
+
+
+    @NotEmpty
+    private Integer categoryId;
     /**
      * 文章标题
      */
