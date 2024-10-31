@@ -51,7 +51,6 @@ public class ArticleController {
     @Operation(summary = "新增文章")
     @PostMapping("/add")
     public Result add(@RequestBody article article) {
-        article.setId(null);
         article.setVisitCount(0);
         article.setCreateTime(LocalDateTime.now());
         article.setUpdateTime(LocalDateTime.now());
@@ -70,5 +69,11 @@ public class ArticleController {
     public Result delete(int id) {
         articleService.removeById(id);
         return Result.success();
+    }
+    @Operation(summary = "查找最新id")
+    @GetMapping("/idGet")
+    public Result newIdGet() {
+        int id = articleService.newIdget();
+        return Result.success(id);
     }
 }
