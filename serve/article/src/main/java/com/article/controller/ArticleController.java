@@ -3,7 +3,7 @@ package com.article.controller;
 
 import com.article.pojo.article;
 import com.article.service.ArticleService;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.pojo.Result;
@@ -41,7 +41,7 @@ public class ArticleController {
         if (state == 3) {
             return Result.success(articleService.list());
         }
-        return Result.success(articleService.list(new QueryWrapper<article>().eq("state", state)));
+        return Result.success(articleService.list(new LambdaQueryWrapper<article>().eq(article::getState, state)));
     }
     @Operation(summary = "根据id查询")
     @GetMapping("/get")
@@ -65,8 +65,8 @@ public class ArticleController {
         return Result.success();
     }
     @Operation(summary = "根据id删除")
-    @DeleteMapping("/delete")
-    public Result delete(int id) {
+    @DeleteMapping("/del")
+    public Result del(int id) {
         articleService.removeById(id);
         return Result.success();
     }
