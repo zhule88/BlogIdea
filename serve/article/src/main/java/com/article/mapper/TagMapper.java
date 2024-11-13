@@ -1,6 +1,6 @@
 package com.article.mapper;
 
-import com.article.pojo.file;
+
 import com.article.pojo.tag;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
