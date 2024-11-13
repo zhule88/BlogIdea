@@ -8,17 +8,16 @@ import com.article.pojo.file;
 import com.article.service.FileService;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.minio.GetPresignedObjectUrlArgs;
-import io.minio.MinioClient;
-import io.minio.PutObjectArgs;
-import io.minio.RemoveObjectsArgs;
+import io.minio.*;
 import io.minio.http.Method;
+import io.minio.messages.DeleteError;
 import io.minio.messages.DeleteObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -69,21 +68,24 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, file> implements Fi
     }
 
     @Override
-    public void delall(int articleId) {
-        List<file> list =  lambdaQuery().ge(file::getArticleId,articleId)
+    public void delall(int articleId) throws Exception {
+        List<file> list =  lambdaQuery().eq(file::getArticleId,articleId)
                 .select(file::getFilename)
                 .list();
         List<DeleteObject> deleteObjects = new ArrayList<>();
         for (file file : list) {
             deleteObjects.add(new DeleteObject(file.getFilename()));
         }
-        minioClient.removeObjects(RemoveObjectsArgs.builder()
+        Iterable<Result<DeleteError>> results = minioClient.removeObjects(RemoveObjectsArgs.builder()
                 .bucket(bucketName)
                 .objects(deleteObjects)
                 .build());
-        lambdaUpdate().ge(file::getArticleId,articleId)
+        for (Result<DeleteError> result : results) {
+            DeleteError error = result.get();
+            log.error("Error in deleting object " + error.objectName() + "; " + error.message());
+        }
+        lambdaUpdate().eq(file::getArticleId,articleId)
                 .remove();
-
     }
 
 }

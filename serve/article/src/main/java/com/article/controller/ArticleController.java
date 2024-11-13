@@ -25,23 +25,30 @@ public class ArticleController {
 
     @Operation(summary = "分页查询")
     @GetMapping("/page")
-    public Result page(int current, int size) {
+    public Result page(int current, int size,int state) {
         Page<article> pa = Page.of(current, size);
         pa.addOrder(new OrderItem("update_time", false));
         // 1.分页查询
-        articleService.page(pa);
+        articleService.lambdaQuery().eq(article::getState,state).page(pa);
         page<article> p = new page<>(pa.getTotal(), pa.getRecords());
         // 2.封装并返回
         return Result.success(p);
     }
 
-    @Operation(summary = "查询所有或状态查询")
+    @Operation(summary = "根据状态或置顶查询")
     @GetMapping("/list")
-    public Result list(int state) {
-        if (state == 3) {
+    public Result list(  @RequestParam(required = false,defaultValue = "3")int state,
+                         @RequestParam(required = false,defaultValue = "3")int top) {
+        if (state == 3 && top == 3) {
             return Result.success(articleService.list());
         }
-        return Result.success(articleService.list(new LambdaQueryWrapper<article>().eq(article::getState, state)));
+        if(state == 3){
+            return Result.success(articleService.list(new LambdaQueryWrapper<article>()
+                    .eq(article::getTop, top)));
+        }
+        return Result.success(articleService.list(new LambdaQueryWrapper<article>()
+                .eq(article::getState, state)));
+
     }
     @Operation(summary = "根据id查询")
     @GetMapping("/get")

@@ -10,5 +10,5 @@ public interface FileService  extends IService<file> {
     String getFileName(MultipartFile file);
     String addFile( MultipartFile file,String filename) throws Exception;
     void addSql(String filename,int articleId);
-    void delall(int articleId);
+    void delall(int articleId)  throws Exception;
 }

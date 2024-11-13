@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class CategoryController {
     @Autowired
     CategoryService categoryService;
-    @Operation(summary = "文章分类查询")
+    @Operation(summary = "查询分类表")
     @GetMapping("/list")
     public Result list(){
         return Result.success(categoryService.list());

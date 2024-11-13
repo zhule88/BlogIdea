@@ -50,7 +50,7 @@ public class FileController {
                         .bucket(bucketName)
                         .object(filename)
                         .build());
-        fileService.remove(new LambdaQueryWrapper<file>().ge(file::getFilename,filename));
+        fileService.remove(new LambdaQueryWrapper<file>().eq(file::getFilename,filename));
         return Result.success();
     }
 
