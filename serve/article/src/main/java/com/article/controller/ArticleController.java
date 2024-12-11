@@ -2,18 +2,23 @@ package com.article.controller;
 
 
 import com.article.pojo.article;
+
 import com.article.service.ArticleService;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.pojo.Result;
 import com.pojo.page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/article")
@@ -27,11 +32,10 @@ public class ArticleController {
     @GetMapping("/page")
     public Result page(int current, int size,int state) {
         Page<article> pa = Page.of(current, size);
-        pa.addOrder(new OrderItem("update_time", false));
-        // 1.分页查询
+        pa.addOrder(new OrderItem("create_time", false));
         articleService.lambdaQuery().eq(article::getState,state).page(pa);
         page<article> p = new page<>(pa.getTotal(), pa.getRecords());
-        // 2.封装并返回
+
         return Result.success(p);
     }
 
@@ -39,15 +43,7 @@ public class ArticleController {
     @GetMapping("/list")
     public Result list(  @RequestParam(required = false,defaultValue = "3")int state,
                          @RequestParam(required = false,defaultValue = "3")int top) {
-        if (state == 3 && top == 3) {
-            return Result.success(articleService.list());
-        }
-        if(state == 3){
-            return Result.success(articleService.list(new LambdaQueryWrapper<article>()
-                    .eq(article::getTop, top)));
-        }
-        return Result.success(articleService.list(new LambdaQueryWrapper<article>()
-                .eq(article::getState, state)));
+        return Result.success(articleService.list(state,top));
 
     }
     @Operation(summary = "根据id查询")
@@ -55,6 +51,21 @@ public class ArticleController {
     public Result get(int id) {
         return Result.success(articleService.getById(id));
     }
+
+    @Operation(summary = "根据id集合查询")
+    @PostMapping("/list/byIds")
+    public Result getByIds( @RequestBody List<Integer> ids) {
+        return Result.success(articleService.listByIds(ids));
+    }
+
+    @Operation(summary = "根据分类id查询")
+    @GetMapping("/list/byCateId")
+    public Result getArticle(Integer id){
+        return Result.success( articleService.lambdaQuery()
+                .eq(article::getCategoryId,id)
+                .list());
+    }
+
     @Operation(summary = "新增文章")
     @PostMapping("/add")
     public Result add(@RequestBody article article) {
@@ -77,10 +88,19 @@ public class ArticleController {
         articleService.removeById(id);
         return Result.success();
     }
-    @Operation(summary = "查找最新id")
-    @GetMapping("/idGet")
-    public Result newIdGet() {
-        int id = articleService.newIdget();
-        return Result.success(id);
+
+    @Operation(summary = "查询分类对应文章数")
+    @GetMapping("/count")
+    public Result count(int id){
+        return Result.success(articleService.lambdaQuery().eq(article::getCategoryId, id).count());
+    }
+
+    @Operation(summary = "查询文章上下篇")
+    @GetMapping("/around")
+    public Result around(int id){
+        List<article> res = new ArrayList<>();
+        res.add(articleService.lambdaQuery().lt(article::getId,id).eq(article::getState,2).orderByDesc(article::getId) .last("LIMIT 1").one());
+        res.add(articleService.lambdaQuery().gt(article::getId,id).eq(article::getState,2).last("LIMIT 1").one());
+        return Result.success(res);
     }
 }

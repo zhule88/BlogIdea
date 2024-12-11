@@ -4,13 +4,12 @@ import com.article.pojo.articletag;
 import com.article.service.ArticleTagService;
 import com.article.service.TagService;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.pojo.Result;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,9 +27,10 @@ public class TagController {
     public Result list(){
         return Result.success(tagService.list());
     }
-    @Operation(summary = "查询文章标签")
-    @GetMapping("/article/get")
-    public Result getArticleTag(int id){
+
+    @Operation(summary = "根据文章id查询标签")
+    @GetMapping("/articleTag/get")
+    public Result getArticleTag(Integer id){
         return Result.success(articleTagService.lambdaQuery()
                 .eq(articletag::getArticleId,id)
                 .select(articletag::getTagId)
@@ -39,18 +39,33 @@ public class TagController {
                 .map(articletag::getTagId)
                 .collect(Collectors.toList()));
     }
+    @Operation(summary = "根据标签id查询文章")
+    @GetMapping("/article/list")
+    public Result getArticle(Integer id){
+        return Result.success( articleTagService.lambdaQuery()
+                .eq(articletag::getTagId,id)
+                .select(articletag::getArticleId)
+                .list()
+
+                .stream()
+                .map(articletag::getArticleId)
+                .collect(Collectors.toList()));
+    }
 
     @Operation(summary = "文章添加标签")
-    @PostMapping("/article/add")
-    public Result addArticleTag(List<Integer> ids,@RequestParam(value = "id") int articleId){
-        List<articletag> l = new ArrayList<>();
-        for (int tagId:ids){
-            articletag t = new articletag();
-            t.setArticleId(articleId);
-            t.setTagId(tagId);
-            l.add(t);
-        }
-        articleTagService.saveBatch(l);
+    @PostMapping("/articleTag/add")
+    public Result addArticleTag(@RequestBody List<articletag> articletaglist){
+        articleTagService.remove(new LambdaQueryWrapper<articletag>()
+                .eq(articletag::getArticleId,articletaglist.get(0).getArticleId()));
+        articleTagService.saveBatch(articletaglist);
+        return Result.success();
+    }
+
+    @Operation(summary = "文章删除标签")
+    @DeleteMapping("/articleTag/del")
+    public Result delArticleTag(int id){
+        articleTagService.remove(new LambdaQueryWrapper<articletag>()
+                .eq(articletag::getArticleId,id));
         return Result.success();
     }
 }
