@@ -46,11 +46,9 @@ public class FileController {
     @Operation(summary = "删除单个文件")
     @DeleteMapping("/del")
     public Result del(String filename) throws Exception {
-        int idx= filename.lastIndexOf("/");
-        String name = filename.substring(idx + 1);
         minioClient.removeObject(RemoveObjectArgs.builder()
                         .bucket(bucketName)
-                        .object(name)
+                        .object(filename)
                         .build());
         fileService.remove(new LambdaQueryWrapper<file>().eq(file::getFilename,filename));
         return Result.success();

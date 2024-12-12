@@ -2,6 +2,7 @@ package com.article.pojo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -12,27 +13,25 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @TableName("article")
 @Data
 public class article {
 
-    /**
-     * ID
-     */
+
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
 
-
-    @NotEmpty
-    private Integer categoryId;
     /**
      * 文章标题
      */
     @NotEmpty
     @Pattern(regexp = "^\\S{1,20}$")
     private String title;
+
+
 
     /**
      * 文章封面
@@ -48,6 +47,12 @@ public class article {
     private String content;
 
 
+    @NotEmpty
+    private Integer categoryId;
+
+    @TableField(exist = false)
+    private List<Integer> tags;
+
     /**
      * 文章状态:，0草稿, 1隐藏,2发布
      */
@@ -56,11 +61,11 @@ public class article {
 
 
     /*
-    * 文章访问量
-    */
+    * 
+    * */
     private Integer visitCount;
 
-    /*
+    /**
     * 是否置顶
     */
     @NotNull

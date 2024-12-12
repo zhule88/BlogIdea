@@ -55,8 +55,10 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, file> implements Fi
                 .object(filename)
                 .method(Method.GET)
                 .build());
-        String[] s = url.split("\\?");
-        return s[0];
+
+        int articleIndex = url.indexOf("/article/");
+        int endIndex = url.indexOf("?");
+        return url.substring(articleIndex + "/article/".length(), endIndex);
     }
 
     @Override
@@ -87,5 +89,4 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, file> implements Fi
         lambdaUpdate().eq(file::getArticleId,articleId)
                 .remove();
     }
-
 }

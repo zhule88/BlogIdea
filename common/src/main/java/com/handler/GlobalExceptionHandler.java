@@ -14,7 +14,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler
     public Result exceptionHandler(Exception ex){
-        System.out.println(ex.getMessage());
         return Result.error(ex.getMessage());
     }
 }
