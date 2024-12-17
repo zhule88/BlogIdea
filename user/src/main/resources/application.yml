@@ -1,8 +1,8 @@
 server:
-  port: 8001
+  port: 8002
 spring:
   application:
-    name: article
+    name: user
   cloud:
     nacos:
       discovery:
@@ -13,9 +13,9 @@ spring:
     username: root
     password: 1234
   servlet:
-   multipart:
-     max-file-size: 50MB
-     max-request-size: 100MB
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 100MB
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
@@ -28,6 +28,3 @@ springdoc:
 
 knife4j:
   enable: true
-
-
-

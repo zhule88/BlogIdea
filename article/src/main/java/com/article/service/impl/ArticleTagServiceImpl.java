@@ -33,6 +33,7 @@ public class ArticleTagServiceImpl extends ServiceImpl<ArticleTagMapper, article
     }
 
     public List<article> tag(List<article> aarticle) {
+
         List<Integer> l = aarticle.stream()
                 .map(article::getId)
                 .toList();
@@ -42,12 +43,10 @@ public class ArticleTagServiceImpl extends ServiceImpl<ArticleTagMapper, article
         Map<Integer,List<Integer>> m = new HashMap<>();
         for (articletag articletag : ll) {
             List<Integer> lll =  m.getOrDefault(articletag.getTagId(),new ArrayList<>());
-            lll.add(articletag.getArticleId());
-            m.put(articletag.getTagId(),lll);
+            lll.add(articletag.getTagId());
+            m.put(articletag.getArticleId(),lll);
         }
-        aarticle.forEach(article -> {
-            article.setTags(m.get(article.getId()));
-        });
+        aarticle.forEach(article -> article.setTags(m.get(article.getId())));
         return aarticle;
     }
 }

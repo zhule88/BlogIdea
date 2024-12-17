@@ -1,0 +1,19 @@
+server:
+  port: 8000
+spring:
+  application:
+    name: gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.88.130:8848
+    gateway:
+      routes:
+        - id: article
+          uri: lb://article
+          predicates:
+            - Path=/article/**, /category/**,/file/**,/tag/**
+        - id: user
+          uri: lb://user
+          predicates:
+            - Path=/link/**
