@@ -59,11 +59,21 @@
 			<artifactId>hutool-all</artifactId>
 			<version>5.7.17</version>
 		</dependency>
-
-	<!--	<dependency>
+		<!--nacos共享配置-->
+		<dependency>
 			<groupId>com.alibaba.cloud</groupId>
 			<artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
-		</dependency>-->
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-bootstrap</artifactId>
+		</dependency>
+		<!--minio-->
+		<dependency>
+			<groupId>io.minio</groupId>
+			<artifactId>minio</artifactId>
+			<version>8.5.9</version>
+		</dependency>
 	</dependencies>
 
 

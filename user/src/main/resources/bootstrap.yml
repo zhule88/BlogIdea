@@ -1,0 +1,14 @@
+server:
+  port: 8002
+spring:
+  application:
+    name: user
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.88.130:8848
+      config:
+        server-addr: 192.168.88.130:8848
+        file-extension: yaml # 文件后缀名
+        shared-configs: # 共享配置
+          - dataId: jdbc.yaml # 共享mybatis配置

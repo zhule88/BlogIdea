@@ -17,3 +17,20 @@ spring:
           uri: lb://user
           predicates:
             - Path=/link/**
+      globalcors:
+        corsConfigurations:
+          '[/**]': # 匹配所有路径
+            allowedOrigins: # 允许访问的源
+              - "http://localhost:5173"
+            allowedMethods: # 允许的HTTP方法
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders: # 允许在请求中携带的头信息
+              - "*"
+            allowCredentials: true # 是否允许携带cookie
+            maxAge: 3600 # 预检请求的缓存时间(秒)
+
+

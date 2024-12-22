@@ -8,6 +8,7 @@ import com.article.service.ArticleTagService;
 import com.pojo.Result;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,8 +27,6 @@ public class ArticleController {
     @Autowired
     ArticleTagService articleTagService;
 
-
-    
     @Operation(summary = "分页查询")
     @GetMapping("/page")
     public Result page(int current, int size,int state) {
@@ -63,9 +62,11 @@ public class ArticleController {
     @Operation(summary = "根据标签id查询")
     @GetMapping("/list/byTagId")
     public Result getArticleByTagId(Integer id){
-        return Result.success( articleTagService.lambdaQuery()
+        List<articletag> l  =articleTagService.lambdaQuery()
                 .eq(articletag::getTagId,id)
-                .list());
+                .list();
+        List<Integer> ll = l.stream().map(articletag::getArticleId).toList();
+        return Result.success(articleService.listByIds(ll));
     }
 
     @Operation(summary = "新增文章")

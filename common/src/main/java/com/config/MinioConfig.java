@@ -1,11 +1,11 @@
-package com.article.config;
+package com.config;
 
 
 import io.minio.MinioClient;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/*
 @Configuration
 public class MinioConfig {
 
@@ -17,3 +17,4 @@ public class MinioConfig {
                 build();
     }
 }
+*/

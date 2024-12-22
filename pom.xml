@@ -16,6 +16,8 @@
     <modules>
         <module>article</module>
         <module>common</module>
+        <module>gateway</module>
+        <module>user</module>
     </modules>
     <properties>
         <java.version>17</java.version>
