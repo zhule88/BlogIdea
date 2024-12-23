@@ -7,6 +7,7 @@ import lombok.Data;
 
 @TableName("file")
 @Data
+
 public class file {
     @TableId(value = "id", type = IdType.AUTO)
     int id;

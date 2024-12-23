@@ -55,10 +55,5 @@ public class LinkController {
 
 
 
-    @Operation(summary = "测试")
-    @GetMapping("/test")
-    public Result test() throws Exception {
-        mailService.send("ely.sia@qq.com","验证码是114514");
-        return Result.success();
-    }
+
 }

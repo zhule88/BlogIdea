@@ -8,7 +8,6 @@ import com.article.service.ArticleTagService;
 import com.pojo.Result;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -72,7 +71,6 @@ public class ArticleController {
     @Operation(summary = "新增文章")
     @PostMapping("/add")
     public Result add(@RequestBody article article) {
-        article.setVisitCount(0);
         article.setCreateTime(LocalDateTime.now());
         article.setUpdateTime(LocalDateTime.now());
 
@@ -119,4 +117,14 @@ public class ArticleController {
         return Result.success(res);
     }
 
+    @Operation(summary = "配合转移monio")
+    @GetMapping("/clone")
+    public Result clonee(){
+        List<article> l = articleService.list();
+        l.forEach(item->{
+            item.setContent(item.getContent().replace("localhost","192.168.88.130"));
+            articleService.updateById(item);
+        });
+        return Result.success();
+    }
 }
