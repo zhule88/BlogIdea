@@ -1,1 +1,8 @@
 knife: com.user
+spring:
+  rabbitmq:
+    host: 192.168.88.130
+    port: 5672
+    virtual-host: /zhule
+    password: 1234
+    username: zhule

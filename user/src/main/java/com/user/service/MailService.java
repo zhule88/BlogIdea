@@ -1,7 +1,9 @@
 package com.user.service;
 
+import com.user.pojo.message;
+
 import javax.mail.internet.AddressException;
 
 public interface MailService {
-    void send(String email,String content) throws Exception;
+    void send(message msg) throws Exception;
 }
