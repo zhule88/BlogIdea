@@ -1,21 +1,20 @@
-package com.user.service.impl;
+package com.user.utils;
 
 
 import com.user.pojo.message;
-import com.user.service.MailService;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import javax.mail.*;
-import javax.mail.internet.AddressException;
+
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import java.util.Properties;
 
 
-@Service
-public class MailServiceImpl implements MailService {
+@Component
+public class EmailUtils {
     String username = "ely-sia@qq.com";
     String password = "tgbpzcxtixddeaij";
 

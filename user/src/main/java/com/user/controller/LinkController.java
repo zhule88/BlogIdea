@@ -4,7 +4,6 @@ import com.pojo.Result;
 import com.user.pojo.link;
 import com.user.pojo.message;
 import com.user.service.LinkService;
-import com.user.service.MailService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -22,8 +21,7 @@ public class LinkController {
 
     @Autowired
     LinkService linkService;
-    @Autowired
-    MailService mailService;
+
     @Autowired
     RabbitTemplate rabbitTemplate;
 
@@ -41,7 +39,7 @@ public class LinkController {
         return Result.success();
     }
 
-    @Operation(summary = "修改友链")
+    @Operation(summary = "通过友链申请")
     @GetMapping("/update")
     public Result update( Integer id,  String email)  {
 
