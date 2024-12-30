@@ -19,7 +19,6 @@ public class user {
     private String password;
     private String avatar;
     private String email;
-    private String intro;
     @JsonFormat(pattern="yyyy-MM-dd   HH:mm:ss",timezone = "GMT+8")
     private LocalDateTime createTime;
 

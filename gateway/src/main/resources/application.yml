@@ -16,7 +16,7 @@ spring:
         - id: user
           uri: lb://user
           predicates:
-            - Path=/link/**
+            - Path=/link/**,/user/**
       globalcors:
         corsConfigurations:
           '[/**]': # 匹配所有路径

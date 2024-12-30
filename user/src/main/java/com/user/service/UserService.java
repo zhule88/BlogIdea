@@ -2,9 +2,11 @@ package com.user.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 
-import com.user.pojo.register;
+import com.pojo.Result;
+import com.user.pojo.auth;
 import com.user.pojo.user;
 
 public interface UserService  extends IService<user> {
-
+    Result login( user user);
+    Result register(auth auth);
 }

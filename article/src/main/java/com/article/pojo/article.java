@@ -54,15 +54,12 @@ public class article {
     private List<Integer> tags;
 
     /**
-     * 文章状态:，0草稿, 1隐藏,2发布
+     * 文章状态:，1隐藏, 2发布
      */
     @NotNull
     private Integer state;
 
 
-    /*
-    * 
-    * */
     private Integer visitCount;
 
     /**
