@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.Email;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -17,7 +18,9 @@ public class user {
 
     private String username;
     private String password;
+
     private String avatar;
+    @Email
     private String email;
     @JsonFormat(pattern="yyyy-MM-dd   HH:mm:ss",timezone = "GMT+8")
     private LocalDateTime createTime;

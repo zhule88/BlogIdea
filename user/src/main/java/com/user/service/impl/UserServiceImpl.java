@@ -18,6 +18,8 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Objects;
 
 @Service
@@ -31,13 +33,30 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, user> implements Us
     private PasswordEncoder passwordEncoder;
     @Autowired
     JwtUtils jwtUtils;
-    public Result login(user uuser){
-        user u = lambdaQuery().eq(user::getEmail,uuser.getEmail())
-                .one();
-        if(!passwordEncoder.matches(uuser.getPassword(), u.getPassword() )){
-            return Result.error("账号或密码错误");
+    public Result login(auth auth){
+        if(auth.getCode().isEmpty()){
+            user u = lambdaQuery().eq(user::getUsername,auth.getUsername())
+                    .one();
+            if( u == null){
+                return Result.error("用户不存在");
+            }
+            if(!passwordEncoder.matches(auth.getPassword(), u.getPassword() )){
+                return Result.error("账号或密码错误");
+            }
+            return Result.success(jwtUtils.getJWT(u.getId().toString()));
+        }else{
+
+            user u = lambdaQuery().eq(user::getEmail,auth.getEmail())
+                    .one();
+            if( u == null){
+                return Result.error("用户不存在");
+            }
+            String code = redisTemplate.opsForValue().get("code:"+auth.getEmail());
+            if (!auth.getCode().equals(code)) {
+                return Result.error("验证码错误");
+            }
+            return Result.success(jwtUtils.getJWT(u.getId().toString()));
         }
-        return Result.success(jwtUtils.getJWT(u.getId().toString()));
     }
 
     @Override
@@ -53,6 +72,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, user> implements Us
         u = new user();
         BeanUtils.copyProperties(auth, u);
         u.setPassword(passwordEncoder.encode(u.getPassword()));
+        u.setCreateTime(LocalDateTime.now());
         userMapper.insert(u);
         return Result.success();
     }

@@ -7,6 +7,7 @@ import com.user.pojo.message;
 import com.user.pojo.auth;
 import com.user.pojo.user;
 import com.user.service.UserService;
+import com.user.utils.JwtUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -28,22 +29,29 @@ public class UserController {
     @Autowired
     RabbitTemplate rabbitTemplate;
     @Autowired
-     StringRedisTemplate redisTemplate;
+    StringRedisTemplate redisTemplate;
 
     MinioService minioService = new MinioService("user");
+    @Autowired
+    private JwtUtils jwtUtils;
 
     @Operation(summary = "登录")
     @PostMapping("/login")
-    public Result login(@RequestBody user user) {
-       return userService.login(user);
+    public Result login(@RequestBody auth auth) {
+       return userService.login(auth);
     }
-
-
     @Operation(summary = "注册")
     @PostMapping("/register")
     public Result register(@RequestBody auth auth) {
         return  userService.register(auth);
     }
+
+    @Operation(summary = "获取用户信息")
+    @GetMapping("/userInfo")
+    public Result userInfo(@RequestHeader( "Authorization") String token) {
+        return  Result.success(userService.getById(jwtUtils.parseJWT(token)));
+    }
+
     @Operation(summary = "上传头像")
     @PostMapping("/avatar")
     public Result avatar(@RequestParam("file") MultipartFile file,String email) throws Exception {
@@ -58,9 +66,9 @@ public class UserController {
     @GetMapping("/email")
     public Result emailSend(String email) {
         String code = String.valueOf(new Random().nextInt(9000) + 1000);
-        redisTemplate.opsForValue().set("code:"+email, code, 5, TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set("code:"+email, code, 10, TimeUnit.MINUTES);
         rabbitTemplate.convertAndSend("email","email",
-                new message(email,"\uD83D\uDC4F您的注册验证码为" + code+",五分钟内有效"));
+                new message(email,"\uD83D\uDC4F您的注册验证码为" + code+",十分钟内有效"));
         return Result.success();
     }
 

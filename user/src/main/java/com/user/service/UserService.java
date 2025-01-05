@@ -7,6 +7,6 @@ import com.user.pojo.auth;
 import com.user.pojo.user;
 
 public interface UserService  extends IService<user> {
-    Result login( user user);
+    Result login( auth auth);
     Result register(auth auth);
 }

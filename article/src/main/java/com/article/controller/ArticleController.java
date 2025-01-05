@@ -81,7 +81,9 @@ public class ArticleController {
     @Operation(summary = "修改文章")
     @PutMapping("/update")
     public Result update(@RequestBody article article) {
-        article.setUpdateTime(LocalDateTime.now());
+        if(articleService.getById(article.getId()).getContent().equals(article.getContent())) {
+            article.setUpdateTime(LocalDateTime.now());
+        }
         articleTagService.lambdaUpdate().eq(articletag::getArticleId,article.getId()).remove();
         List<articletag> l = new ArrayList<>();
         for (Integer i: article.getTags()) {

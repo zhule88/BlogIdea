@@ -14,9 +14,6 @@ import java.util.Date;
 public class JwtUtils {
     // 用于加密的私钥
     private final String secretKey = "zhule";
-    /**
-     * 创建 jwt
-     */
     public String getJWT(String userId) {
         long expirePeriod = 6 * 30 * 24 * 60 * 60 * 1000L;
         Date expireTime = new Date( new Date().getTime() + expirePeriod);
@@ -26,9 +23,6 @@ public class JwtUtils {
                 .withExpiresAt( expireTime)
                 .sign(Algorithm.HMAC256(secretKey));
     }
-    /**
-     * 解析 jwt
-     */
     public String parseJWT(String jwt) {
         try {
             DecodedJWT decodedjwt = JWT.require(Algorithm.HMAC256(secretKey))
@@ -36,7 +30,7 @@ public class JwtUtils {
             return decodedjwt.getSubject();
         }
         catch (JWTVerificationException e) {
-            throw new JWTVerificationException("jwt 解析失败");
+            throw new JWTVerificationException("用户未登录或登录过期");
         }
     }
 }
