@@ -1,6 +1,6 @@
 package com.user.controller;
 
-import com.pojo.Result;
+import com.common.pojo.Result;
 import com.user.pojo.link;
 import com.user.pojo.message;
 import com.user.service.LinkService;

@@ -5,8 +5,8 @@ import com.article.pojo.file;
 import com.article.service.FileService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 
-import com.pojo.Result;
-import com.service.MinioService;
+import com.common.pojo.Result;
+import com.common.service.MinioService;
 
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,7 +14,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import java.util.List;
+
 
 
 @RestController
@@ -24,8 +24,9 @@ import java.util.List;
 public class FileController {
     @Autowired
     FileService fileService;
+    @Autowired
+    MinioService minioService;
 
-    MinioService minioService = new MinioService("article");
 
     @Operation(summary = "获取文章所有文件名")
     @GetMapping("/list")
@@ -54,18 +55,5 @@ public class FileController {
         return Result.success();
     }
 
-    @Operation(summary = "删除所有文件")
-    @DeleteMapping("/delall")
-    public Result delall(int id) throws Exception {
-        List<String> list =  fileService.lambdaQuery().eq(file::getArticleId,id)
-                .list()
-                .stream().
-                map(file::getFilename).
-                toList();
-        minioService.delall(list);
-        fileService.lambdaUpdate().eq(file::getArticleId,id)
-                .remove();
-        return Result.success();
-    }
 
 }

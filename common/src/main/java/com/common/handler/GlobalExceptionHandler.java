@@ -1,8 +1,8 @@
-package com.handler;
+package com.common.handler;
 
 
 
-import com.pojo.Result;
+import com.common.pojo.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;

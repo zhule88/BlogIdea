@@ -1,15 +1,15 @@
-package com.user;
+package com.manage;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.common","com.user"})
-public class UserApplication {
+@ComponentScan(basePackages = {"com.common","com.article","com.user"})
+public class ManageApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(UserApplication.class, args);
+        SpringApplication.run(ManageApplication.class, args);
     }
 
 }

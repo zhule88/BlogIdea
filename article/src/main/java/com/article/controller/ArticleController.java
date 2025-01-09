@@ -5,7 +5,9 @@ import com.article.pojo.article;
 import com.article.pojo.articletag;
 import com.article.service.ArticleService;
 import com.article.service.ArticleTagService;
-import com.pojo.Result;
+import com.article.service.FileService;
+import com.common.pojo.Result;
+import com.common.service.MinioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,7 @@ public class ArticleController {
     ArticleService articleService;
     @Autowired
     ArticleTagService articleTagService;
+
 
     @Operation(summary = "分页查询")
     @GetMapping("/page")
@@ -73,15 +76,13 @@ public class ArticleController {
     public Result add(@RequestBody article article) {
         article.setCreateTime(LocalDateTime.now());
         article.setUpdateTime(LocalDateTime.now());
-
         articleService.save(article);
-
         return Result.success();
     }
     @Operation(summary = "修改文章")
     @PutMapping("/update")
     public Result update(@RequestBody article article) {
-        if(articleService.getById(article.getId()).getContent().equals(article.getContent())) {
+        if(!articleService.getById(article.getId()).getContent().equals(article.getContent())) {
             article.setUpdateTime(LocalDateTime.now());
         }
         articleTagService.lambdaUpdate().eq(articletag::getArticleId,article.getId()).remove();
@@ -93,12 +94,18 @@ public class ArticleController {
         articleService.updateById(article);
         return Result.success();
     }
-
-
-
+    @Autowired
+    FileService fileService;
+    @Autowired
+    MinioService minioService;
     @Operation(summary = "根据id删除")
     @DeleteMapping("/del")
-    public Result del(int id) {
+    public Result del(int id) throws Exception {
+        fileService.delAll(id);
+        article a = articleService.getById(id);
+        int lastIndex = a.getImage().lastIndexOf("/");
+        String fileName = a.getImage().substring(lastIndex + 1);
+        minioService.del(fileName);
         articleTagService.lambdaUpdate().eq(articletag::getArticleId,id).remove();
         articleService.removeById(id);
         return Result.success();
@@ -119,14 +126,8 @@ public class ArticleController {
         return Result.success(res);
     }
 
-    @Operation(summary = "配合转移monio")
-    @GetMapping("/clone")
-    public Result clonee(){
-        List<article> l = articleService.list();
-        l.forEach(item->{
-            item.setContent(item.getContent().replace("localhost","192.168.88.130"));
-            articleService.updateById(item);
-        });
-        return Result.success();
-    }
+
+
+
+    
 }

@@ -8,7 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.config","com.handler","com.article"})
+@ComponentScan(basePackages = {"com.common","com.article"})
 public class ArticleApplication {
 
     public static void main(String[] args) {

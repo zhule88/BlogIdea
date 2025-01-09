@@ -4,7 +4,7 @@ import com.article.pojo.article;
 import com.article.pojo.category;
 import com.article.service.ArticleService;
 import com.article.service.CategoryService;
-import com.pojo.Result;
+import com.common.pojo.Result;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;

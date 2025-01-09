@@ -6,5 +6,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
 
 
 public interface FileService  extends IService<file> {
-
+    void delAll(int id);
 }

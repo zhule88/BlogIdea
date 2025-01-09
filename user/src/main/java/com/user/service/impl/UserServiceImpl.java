@@ -2,7 +2,8 @@ package com.user.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
-import com.pojo.Result;
+import com.common.pojo.Result;
+import com.common.service.MinioService;
 import com.user.mapper.UserMapper;
 
 
@@ -14,13 +15,13 @@ import com.user.service.UserService;
 import com.user.utils.JwtUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.Objects;
 
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, user> implements UserService {
@@ -33,6 +34,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, user> implements Us
     private PasswordEncoder passwordEncoder;
     @Autowired
     JwtUtils jwtUtils;
+@Autowired
+    MinioService minioService ;
+
+
     public Result login(auth auth){
         if(auth.getCode().isEmpty()){
             user u = lambdaQuery().eq(user::getUsername,auth.getUsername())
@@ -45,7 +50,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, user> implements Us
             }
             return Result.success(jwtUtils.getJWT(u.getId().toString()));
         }else{
-
             user u = lambdaQuery().eq(user::getEmail,auth.getEmail())
                     .one();
             if( u == null){
@@ -69,12 +73,31 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, user> implements Us
         if (u != null) {
             return Result.error("邮箱已注册");
         }
+        u = lambdaQuery().eq(user::getUsername, auth.getUsername()).one();
+        if (u != null) {
+            return Result.error("用户名重复");
+        }
         u = new user();
         BeanUtils.copyProperties(auth, u);
         u.setPassword(passwordEncoder.encode(u.getPassword()));
         u.setCreateTime(LocalDateTime.now());
         userMapper.insert(u);
         return Result.success();
+    }
+
+    @Override
+    public String avatar(MultipartFile file, String email) throws Exception {
+        String url = minioService.addFile(file);
+        user u  = lambdaQuery()
+                .eq(user::getEmail, email)
+                .one();
+        int lastIndex = u.getAvatar().lastIndexOf("/");
+        String fileName = u.getAvatar().substring(lastIndex + 1);
+        minioService.del(fileName);
+        lambdaUpdate()
+                .eq(user::getEmail, email)
+                .set(user::getAvatar,url).update();
+        return url;
     }
 }
 
