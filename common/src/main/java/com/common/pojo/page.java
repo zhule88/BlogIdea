@@ -14,5 +14,4 @@ import java.util.List;
 public class page<T>{
      long total;
      List<T> records;
-
 }

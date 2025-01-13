@@ -10,13 +10,15 @@ import com.common.pojo.Result;
 import com.common.service.MinioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
 
 
 @RestController
@@ -59,6 +61,7 @@ public class ArticleController {
     public Result getArticleByCateId(Integer id){
         return Result.success( articleService.lambdaQuery()
                 .eq(article::getCategoryId,id)
+                .eq(article::getState,1)
                 .list());
     }
     @Operation(summary = "根据标签id查询")
@@ -68,7 +71,10 @@ public class ArticleController {
                 .eq(articletag::getTagId,id)
                 .list();
         List<Integer> ll = l.stream().map(articletag::getArticleId).toList();
-        return Result.success(articleService.listByIds(ll));
+        return Result.success(articleService.lambdaQuery()
+                .in(article::getId,ll)
+                .eq(article::getState,1)
+                .list());
     }
 
     @Operation(summary = "新增文章")
@@ -114,20 +120,24 @@ public class ArticleController {
     @Operation(summary = "查询分类对应文章数")
     @GetMapping("/count")
     public Result count(int id){
-        return Result.success(articleService.lambdaQuery().eq(article::getCategoryId, id).count());
+        return Result.success(articleService.lambdaQuery().eq(article::getCategoryId, id).eq(article::getState,1).count());
     }
 
     @Operation(summary = "查询文章上下篇")
     @GetMapping("/around")
     public Result around(int id){
         List<article> res = new ArrayList<>();
-        res.add(articleService.lambdaQuery().lt(article::getId,id).eq(article::getState,2).orderByDesc(article::getId) .last("LIMIT 1").one());
-        res.add(articleService.lambdaQuery().gt(article::getId,id).eq(article::getState,2).last("LIMIT 1").one());
+        res.add(articleService.lambdaQuery().lt(article::getId,id).eq(article::getState,1).orderByDesc(article::getId) .last("LIMIT 1").one());
+        res.add(articleService.lambdaQuery().gt(article::getId,id).eq(article::getState,1).last("LIMIT 1").one());
         return Result.success(res);
     }
-
-
-
-
-    
+    @Operation(summary = "查询文章上下篇")
+    @GetMapping("/get-ip")
+    public Map<String, String> getIp(HttpServletRequest request,
+                                     @RequestHeader(value = "X-Forwarded-For", required = false) String xForwardedFor) {
+        String ipAddress = xForwardedFor != null ? xForwardedFor.split(",")[0] : request.getRemoteAddr();
+        Map<String, String> response = new HashMap<>();
+        response.put("ip", ipAddress);
+        return response;
+    }
 }

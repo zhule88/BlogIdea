@@ -36,16 +36,23 @@ class ManageApplicationTests {
         l2.forEach(a -> a.setAvatar(url+a.getAvatar()));
         userService.updateBatchById(l2);*/
     }
+
+    /**
+     * 换服务器时转移文件和访问地址
+     * @throws Exception
+     */
     @Test
    void clonee() throws Exception{
+        String originHost = "localhost";
+        String targetHost = "192.168.88.130";
         //配置原客户端
         MinioClient sourceClient = MinioClient.builder()
-                .endpoint("http://localhost:9000/")
+                .endpoint("http://"+originHost+":9000")
                 .credentials("minioadmin", "minioadmin")
                 .build();
         // 配置目标客户端
         MinioClient targetClient = MinioClient.builder()
-                .endpoint("http://192.168.88.130:9000/")
+                .endpoint("http://"+targetHost+":9000")
                 .credentials("admin", "admin123")
                 .build();
         //桶名
@@ -65,7 +72,7 @@ class ManageApplicationTests {
         }
         List<article> l = articleService.list();
         l.forEach(item->{
-            item.setContent(item.getContent().replace("localhost","192.168.88.130"));
+            item.setContent(item.getContent().replace(originHost,targetHost));
             articleService.updateById(item);
         });
     }

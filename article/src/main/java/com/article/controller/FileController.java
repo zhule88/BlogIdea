@@ -38,14 +38,15 @@ public class FileController {
     @PostMapping("/add")
     public Result add(@RequestParam("file") MultipartFile ffile,
                       @RequestParam(required = false,value = "id") Integer articleId) throws Exception {
-      String filename = minioService.addFile(ffile);
+      String url = minioService.addFile(ffile);
+      String filename = url.substring(url.lastIndexOf("/")+1);
       if(articleId != null) {
            file f= new file();
            f.setArticleId(articleId);
            f.setFilename(filename);
           fileService.save(f);
       }
-        return Result.success(filename);
+        return Result.success(url);
     }
     @Operation(summary = "删除单个文件")
     @DeleteMapping("/del")
