@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class FileController {
     @Autowired
     FileService fileService;
+
     @Autowired
     MinioService minioService;
 

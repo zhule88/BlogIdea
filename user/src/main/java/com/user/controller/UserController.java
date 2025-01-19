@@ -17,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -43,6 +44,7 @@ public class UserController {
     public Result login(@RequestBody auth auth) {
        return userService.login(auth);
     }
+
     @Operation(summary = "注册")
     @PostMapping("/register")
     public Result register(@RequestBody auth auth) {
@@ -55,6 +57,9 @@ public class UserController {
     public Result userInfo(@RequestHeader( "Authorization") String token) {
         return  Result.success(userService.getById(jwtUtils.parseJWT(token)));
     }
+
+
+
     @Operation(summary = "重置密码")
     @PostMapping("/reset")
     public Result reset(@RequestBody auth auth) {

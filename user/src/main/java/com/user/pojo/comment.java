@@ -24,7 +24,7 @@ public class comment {
 
     private String content;
 
-    private String bowser;
+    private String browser;
 
     private  String location;
 

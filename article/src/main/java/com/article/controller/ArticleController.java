@@ -50,11 +50,11 @@ public class ArticleController {
         return Result.success(articleTagService.tag(articleService.getById(id)));
     }
 
-    @Operation(summary = "根据id集合查询")
+    /*@Operation(summary = "根据id集合查询")
     @PostMapping("/list/byIds")
     public Result getByIds( @RequestBody List<Integer> ids) {
         return Result.success(articleTagService.tag(articleService.listByIds(ids)));
-    }
+    }*/
 
     @Operation(summary = "根据分类id查询")
     @GetMapping("/list/byCateId")
@@ -104,6 +104,7 @@ public class ArticleController {
     FileService fileService;
     @Autowired
     MinioService minioService;
+
     @Operation(summary = "根据id删除")
     @DeleteMapping("/del")
     public Result del(int id) throws Exception {
@@ -130,14 +131,5 @@ public class ArticleController {
         res.add(articleService.lambdaQuery().lt(article::getId,id).eq(article::getState,1).orderByDesc(article::getId) .last("LIMIT 1").one());
         res.add(articleService.lambdaQuery().gt(article::getId,id).eq(article::getState,1).last("LIMIT 1").one());
         return Result.success(res);
-    }
-    @Operation(summary = "查询文章上下篇")
-    @GetMapping("/get-ip")
-    public Map<String, String> getIp(HttpServletRequest request,
-                                     @RequestHeader(value = "X-Forwarded-For", required = false) String xForwardedFor) {
-        String ipAddress = xForwardedFor != null ? xForwardedFor.split(",")[0] : request.getRemoteAddr();
-        Map<String, String> response = new HashMap<>();
-        response.put("ip", ipAddress);
-        return response;
     }
 }

@@ -2,6 +2,8 @@ package com.manage;
 
 import com.article.pojo.article;
 import com.article.service.ArticleService;
+import com.user.pojo.comment;
+import com.user.service.CommentService;
 import com.user.service.UserService;
 import io.minio.*;
 import io.minio.messages.Item;
@@ -22,7 +24,12 @@ class ManageApplicationTests {
 
     @Autowired
     UserService userService;
-
+  /*  @Autowired
+    CommentService commentService;
+    @Test
+    void del(){
+        commentService.lambdaUpdate().ge(comment::getId,0).remove();
+    }*/
 
     String host = "192.168.88.130";
 
