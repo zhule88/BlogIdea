@@ -8,8 +8,10 @@ import com.common.pojo.page;
 import com.user.mapper.CommentMapper;
 import com.user.pojo.comment;
 import com.user.pojo.commentVo;
+import com.user.pojo.like;
 import com.user.pojo.user;
 import com.user.service.CommentService;
+import com.user.service.LikeService;
 import com.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,9 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, comment> impl
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    LikeService likeService;
 
     @Override
     public List<commentVo> page(int id, int current,int size) {
@@ -38,6 +43,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, comment> impl
             user u = userService.getById(c.getUserId());
             commentVo cv = new commentVo();
             BeanUtil.copyProperties(c, cv);
+            cv.setLike(Math.toIntExact(likeService.lambdaQuery().eq(like::getCommentId, c.getId()).count()));
             cv.setAvatar(u.getAvatar());
             cv.setUsername(u.getUsername());
             ll.add(cv);

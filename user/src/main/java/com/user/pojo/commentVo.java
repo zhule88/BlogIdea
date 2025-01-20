@@ -6,4 +6,5 @@ import lombok.Data;
 public class commentVo  extends  comment{
     private String avatar;
     private String username;
+    private int like;
 }

@@ -6,6 +6,7 @@ import com.common.pojo.Result;
 import com.user.pojo.*;
 import com.user.service.CommentService;
 
+import com.user.service.LikeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +24,12 @@ public class CommentController {
     @Autowired
     CommentService commentService;
 
+
+
+
     @Operation(summary = "根据文章id返回父评论")
     @GetMapping("/page")
     public Result page(int id,int current,int size) {
-
         return Result.success(commentService.page(id,current,size));
     }
 
@@ -55,6 +58,8 @@ public class CommentController {
         commentService.save(comment);
         return Result.success();
     }
+
+
 
     @Operation(summary = "删除留言")
     @DeleteMapping("/del")
