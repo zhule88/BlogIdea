@@ -34,7 +34,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, user> implements Us
     private PasswordEncoder passwordEncoder;
     @Autowired
     JwtUtils jwtUtils;
-@Autowired
+    @Autowired
     MinioService minioService ;
 
 
@@ -91,9 +91,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, user> implements Us
         user u  = lambdaQuery()
                 .eq(user::getEmail, email)
                 .one();
-        int lastIndex = u.getAvatar().lastIndexOf("/");
-        String fileName = u.getAvatar().substring(lastIndex + 1);
-        minioService.del(fileName);
+        if(!u.getAvatar().isEmpty()){
+            int lastIndex = u.getAvatar().lastIndexOf("/");
+            String fileName = u.getAvatar().substring(lastIndex + 1);
+            minioService.del(fileName);
+        }
         lambdaUpdate()
                 .eq(user::getEmail, email)
                 .set(user::getAvatar,url).update();

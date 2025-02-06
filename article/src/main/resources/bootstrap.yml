@@ -5,9 +5,10 @@ spring:
     name: article
   cloud:
     nacos:
-      server-addr: 192.168.88.130:8848
+      #server-addr: 192.168.88.130:8848
+      server-addr: 47.97.100.212:8848
       config:
-        file-extension: yaml # 文件后缀名
-        shared-configs: # 共享配置
-          - dataId: jdbc.yaml # 共享mybatis配置
+        file-extension: yaml
+        shared-configs:
+          - dataId: common.yaml
 

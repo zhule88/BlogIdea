@@ -1,6 +1,7 @@
 package com.user.controller;
 
 import com.common.pojo.Result;
+
 import com.user.pojo.link;
 import com.user.pojo.message;
 import com.user.service.LinkService;
@@ -9,26 +10,39 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+
 
 
 @RestController
 @RequestMapping("/link")
 @Tag(name = "友链管理")
 public class LinkController {
-
     @Autowired
     LinkService linkService;
-
     @Autowired
     RabbitTemplate rabbitTemplate;
+    @Autowired
+    RedisTemplate<String, Object> redisTemplate;
 
+    String redisKey = "linkList";
+
+   /* @SuppressWarnings("unchecked")*/
     @Operation(summary = "查询友链表")
     @GetMapping("/list")
     public Result list() {
-        return Result.success(linkService.list());
+       /* List<link> cachedLinks = (List<link>) redisTemplate.opsForValue().get(redisKey);
+        if (cachedLinks == null || cachedLinks.isEmpty()) {
+            List<link> l = linkService.list();
+            redisTemplate.opsForValue().set(redisKey, l);
+            redisTemplate.expire(redisKey, 1, TimeUnit.DAYS);
+            return Result.success(l);
+        }
+            return Result.success(cachedLinks);*/
+        return  Result.success(linkService.list());
     }
 
     @Operation(summary = "新增友链")

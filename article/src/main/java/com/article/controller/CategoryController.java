@@ -38,7 +38,9 @@ public class CategoryController {
         List<category> ll = categoryService.list();
         for (category c : ll){
             Map<Integer,Long> m = new HashMap<>();
-            m.put(c.getId(),articleService.lambdaQuery().eq(article::getCategoryId, c.getId()).count());
+            m.put(c.getId(),articleService.lambdaQuery()
+                    .eq(article::getCategoryId, c.getId())
+                    .eq(article::getState,1).count());
             l.add(m);
         }
         return Result.success(l);

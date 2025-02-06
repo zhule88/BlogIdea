@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -23,9 +22,6 @@ public class CommentController {
 
     @Autowired
     CommentService commentService;
-
-
-
 
     @Operation(summary = "根据文章id返回父评论")
     @GetMapping("/page")
@@ -40,7 +36,7 @@ public class CommentController {
             return Result.success();
         }
           List<comment> l = commentService.lambdaQuery().in(comment::getParentId,ids).list();
-          /*commentService.lambdaUpdate().ge(comment::getId,0).remove();*/
+
         return Result.success(commentService.setUser(l));
     }
 
@@ -60,11 +56,16 @@ public class CommentController {
     }
 
 
+    @Autowired
+    LikeService likeService;
 
     @Operation(summary = "删除留言")
     @DeleteMapping("/del")
     public Result del(int id) {
+
         commentService.removeById(id);
+        commentService.lambdaUpdate().eq(comment::getParentId,id).remove();
+        likeService.lambdaUpdate().eq(like::getCommentId,id).remove();
         return Result.success();
     }
 }

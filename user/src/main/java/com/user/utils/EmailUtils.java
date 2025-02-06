@@ -17,6 +17,7 @@ import java.util.Properties;
 @Slf4j
 @Component
 public class EmailUtils {
+
     String username = "ely-sia@qq.com";
     String password = "tgbpzcxtixddeaij";
 

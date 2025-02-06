@@ -18,7 +18,8 @@ public class LikeController {
     @Operation(summary = "改变点赞")
     @PutMapping("/change")
     public Result change(@RequestBody like llike) {
-        like l = likeService.lambdaQuery().eq(like::getCommentId, llike.getCommentId()).eq(like::getUserId, llike.getUserId()).one();
+        like l = likeService.lambdaQuery().eq(like::getCommentId, llike.getCommentId())
+                .eq(like::getUserId, llike.getUserId()).one();
         if(l == null){
             likeService.save(llike);
         }else{
@@ -26,9 +27,10 @@ public class LikeController {
         }
         return Result.success();
     }
-    @Operation(summary = "改变点赞")
+    @Operation(summary = "查询用户点赞过的评论")
     @GetMapping("/user")
     public Result user(int id) {
+       /* likeService.lambdaUpdate().ge(like::getId,0).remove();*/
         return Result.success(likeService.lambdaQuery().eq(like::getUserId, id).list());
     }
 

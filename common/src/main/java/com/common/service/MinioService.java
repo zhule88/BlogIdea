@@ -29,7 +29,7 @@ public class MinioService {
     public MinioService( @Value("${host}") String host) {
         this.minioClient = MinioClient.builder()
                 .endpoint("http://" + host + ":9000")
-                .credentials("admin", "admin123")
+                .credentials("zhule", "")
                 .build();
     }
     //上传文件

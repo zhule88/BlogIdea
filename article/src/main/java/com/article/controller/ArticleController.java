@@ -10,15 +10,15 @@ import com.common.pojo.Result;
 import com.common.service.MinioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
+
 import java.util.List;
-import java.util.Map;
+
 
 
 @RestController
@@ -34,6 +34,12 @@ public class ArticleController {
     @Operation(summary = "分页查询")
     @GetMapping("/page")
     public Result page(int current, int size,int state) {
+        /*List<article> l = articleService.list();
+        l.forEach(item->{
+            item.setImage(item.getImage().replace("120.27.202.144","47.97.100.212"));
+            item.setContent(item.getContent().replace("120.27.202.144","47.97.100.212"));
+            articleService.updateById(item);
+        });*/
         return Result.success(articleService.page(current, size, state));
     }
 
@@ -50,11 +56,7 @@ public class ArticleController {
         return Result.success(articleTagService.tag(articleService.getById(id)));
     }
 
-    /*@Operation(summary = "根据id集合查询")
-    @PostMapping("/list/byIds")
-    public Result getByIds( @RequestBody List<Integer> ids) {
-        return Result.success(articleTagService.tag(articleService.listByIds(ids)));
-    }*/
+
 
     @Operation(summary = "根据分类id查询")
     @GetMapping("/list/byCateId")
@@ -64,6 +66,7 @@ public class ArticleController {
                 .eq(article::getState,1)
                 .list());
     }
+    
     @Operation(summary = "根据标签id查询")
     @GetMapping("/list/byTagId")
     public Result getArticleByTagId(Integer id){

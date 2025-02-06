@@ -1,13 +1,10 @@
 server:
-  port: 8002
+  port: 8000
 spring:
   application:
-    name: user
+    name: gateway
   cloud:
     nacos:
-      #server-addr: 192.168.88.130:8848
       server-addr: 47.97.100.212:8848
       config:
         file-extension: yaml
-        shared-configs:
-          - dataId: common.yaml
