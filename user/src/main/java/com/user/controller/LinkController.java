@@ -56,9 +56,15 @@ public class LinkController {
     @Operation(summary = "通过友链申请")
     @GetMapping("/update")
     public Result update( Integer id,  String email)  {
-        //这里只用到了异步的功能，完全有更简单的方法
         rabbitTemplate.convertAndSend("email","email",
-                new message(email,"\uD83D\uDC4F恭喜，您的友链申请已通过"));
+                new message(email,"<div style=\"background: #4caf50; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 200px; width: 100%; padding: 20px; border-radius: 8px;\">" +
+                        "<div style=\"font-size: 24px; color: white; margin-bottom: 10px;\">" +
+                        "\uD83D\uDC4F 恭喜，您的友链申请已通过" +
+                        "</div>" +
+                        "<div style=\"font-size: 16px; color: white;\">" +
+                        "感谢您的支持与信任！" +
+                        "</div>" +
+                        "</div>"));
         linkService.lambdaUpdate().eq(link::getId,id).set(link::getState,1).update();
         return Result.success();
     }

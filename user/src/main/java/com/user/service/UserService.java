@@ -11,4 +11,5 @@ public interface UserService  extends IService<user> {
     Result login( auth auth);
     Result register(auth auth);
     String  avatar(MultipartFile file, String email) throws Exception;
+    void codeSend(String email);
 }

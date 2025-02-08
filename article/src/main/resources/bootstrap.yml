@@ -5,8 +5,8 @@ spring:
     name: article
   cloud:
     nacos:
-      #server-addr: 192.168.88.130:8848
-      server-addr: 47.97.100.212:8848
+      server-addr: 192.168.88.130:8848
+#      server-addr: 47.97.100.212:8848
       config:
         file-extension: yaml
         shared-configs:

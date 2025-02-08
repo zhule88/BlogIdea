@@ -2,14 +2,14 @@ package com.user.controller;
 
 
 import com.common.pojo.Result;
-import com.user.pojo.message;
+
 import com.user.pojo.auth;
 import com.user.pojo.user;
 import com.user.service.UserService;
 import com.user.utils.JwtUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -17,9 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
+
 
 @RestController
 @RequestMapping("/user")
@@ -29,11 +27,7 @@ public class UserController {
     @Autowired
     UserService userService;
     @Autowired
-    RabbitTemplate rabbitTemplate;
-    @Autowired
     StringRedisTemplate redisTemplate;
-
-
     @Autowired
     private JwtUtils jwtUtils;
     @Autowired
@@ -83,10 +77,7 @@ public class UserController {
     @Operation(summary = "发送验证码")
     @GetMapping("/email")
     public Result emailSend(String email) {
-        String code = String.valueOf(new Random().nextInt(9000) + 1000);
-        redisTemplate.opsForValue().set("code:"+email, code, 10, TimeUnit.MINUTES);
-        rabbitTemplate.convertAndSend("email","email",
-                new message(email,"\uD83D\uDC4F 您的注册验证码为" + code+",十分钟内有效"));
+        userService.codeSend(email);
         return Result.success();
     }
 }
