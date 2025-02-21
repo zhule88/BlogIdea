@@ -38,8 +38,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, user> implements Us
     private PasswordEncoder passwordEncoder;
     @Autowired
     JwtUtils jwtUtils;
+
+    MinioService minioService;
     @Autowired
-    MinioService minioService ;
+    public UserServiceImpl(MinioService minioService) {
+        this.minioService = minioService;
+        this.minioService.setBucketName("user");
+    }
+
     @Autowired
     RabbitTemplate rabbitTemplate;
 

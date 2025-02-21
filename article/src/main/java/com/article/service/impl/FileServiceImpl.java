@@ -19,8 +19,13 @@ import java.util.List;
 @Service
 public class FileServiceImpl extends ServiceImpl<FileMapper, file> implements FileService {
 
-    @Autowired
     MinioService minioService;
+
+    @Autowired
+    public FileServiceImpl(MinioService minioService) {
+        this.minioService = minioService;
+        this.minioService.setBucketName("article");
+    }
 
     @Override
     public void delAll(int id) {

@@ -7,6 +7,7 @@ import io.minio.*;
 import io.minio.http.Method;
 import io.minio.messages.DeleteObject;
 import jakarta.annotation.Resource;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -18,18 +19,22 @@ import java.util.List;
 import java.util.UUID;
 
 @Component
+@Data
 public class MinioService {
 
 
-    @Resource
+    //@Resource
     String bucketName;
 
+
     MinioClient minioClient;
+
     @Autowired
-    public MinioService( @Value("${host}") String host) {
+    public MinioService( @Value("${host}") String host,@Value("${username}") String username
+            ,@Value("${password}") String password) {
         this.minioClient = MinioClient.builder()
                 .endpoint("http://" + host + ":9000")
-                .credentials("admin", "admin123")
+                .credentials(username, password)
                 .build();
     }
     //上传文件

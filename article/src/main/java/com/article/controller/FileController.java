@@ -25,8 +25,13 @@ public class FileController {
     @Autowired
     FileService fileService;
 
-    @Autowired
     MinioService minioService;
+
+    @Autowired
+    public FileController(MinioService minioService) {
+        this.minioService = minioService;
+        this.minioService.setBucketName("article");
+    }
 
 
     @Operation(summary = "获取文章所有文件名")
